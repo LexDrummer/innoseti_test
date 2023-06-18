@@ -1,0 +1,22 @@
+services:
+
+  api:
+    image: innoseti_test
+    depends_on:
+      - db
+    environment:
+      spring.datasource.url: jdbc:postgresql://db:5432/innoseti_test_db
+      spring.datasource.username: postgres
+      spring.datasource.password: postgres
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: innoseti_test_db
