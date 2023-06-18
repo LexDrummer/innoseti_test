@@ -1,7 +1,6 @@
 package ru.lexdrummer.innoseti_test.entity;
 
 
-
 import jakarta.persistence.*;
 
 import java.util.Collections;
