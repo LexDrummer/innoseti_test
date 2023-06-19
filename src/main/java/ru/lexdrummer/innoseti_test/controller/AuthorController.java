@@ -1,10 +1,14 @@
 package ru.lexdrummer.innoseti_test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.BatchMapping;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import ru.lexdrummer.innoseti_test.entity.Author;
 import ru.lexdrummer.innoseti_test.entity.Book;
+import ru.lexdrummer.innoseti_test.model.BookInput;
 import ru.lexdrummer.innoseti_test.service.AuthorService;
 
 import java.util.List;
@@ -19,10 +23,6 @@ public class AuthorController {
     private AuthorService authorService;
 
     @QueryMapping
-    public List<Author> getAllAuthors() {
-        return authorService.findAll();
-    }
-    @QueryMapping
     public Author getAuthor(@Argument String name) {
         return authorService.getAuthorByName(name);
     }
@@ -35,7 +35,7 @@ public class AuthorController {
     }
 
     @MutationMapping
-    Author saveAuthor(@Argument String name, @Argument List<String> books) {
+    Author saveAuthor(@Argument String name, @Argument List<BookInput> books) {
         return authorService.saveAuthor(name, books);
     }
 }

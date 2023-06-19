@@ -6,6 +6,7 @@ import org.springframework.graphql.data.method.annotation.*;
 import org.springframework.stereotype.Controller;
 import ru.lexdrummer.innoseti_test.entity.Author;
 import ru.lexdrummer.innoseti_test.entity.Book;
+import ru.lexdrummer.innoseti_test.model.AuthorInput;
 import ru.lexdrummer.innoseti_test.service.BookService;
 
 import java.util.Collection;
@@ -26,8 +27,8 @@ public class BookController {
     }
 
     @QueryMapping
-    Collection<Book> getBooksByAuthor(@Argument String author) {
-        return bookService.getBooksByAuthor(author);
+    Collection<Book> getBooksByAuthor(@Argument AuthorInput author) {
+        return bookService.getBooksByAuthor(author.getName());
     }
 
     @BatchMapping
@@ -38,7 +39,7 @@ public class BookController {
     }
 
     @MutationMapping
-    Book saveBook(@Argument String title, @Argument List<String> authors) {
+    Book saveBook(@Argument String title, @Argument List<AuthorInput> authors) {
         return bookService.saveBook(title, authors);
     }
 

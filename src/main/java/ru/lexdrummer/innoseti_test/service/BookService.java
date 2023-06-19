@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.lexdrummer.innoseti_test.entity.Author;
 import ru.lexdrummer.innoseti_test.entity.Book;
+import ru.lexdrummer.innoseti_test.model.AuthorInput;
 import ru.lexdrummer.innoseti_test.repository.BookRepository;
 import ru.lexdrummer.innoseti_test.util.EmptyFieldException;
 
@@ -38,18 +39,18 @@ public class BookService {
     }
 
     @Transactional
-    public Book saveBook(String title, List<String> authors) {
+    public Book saveBook(String title, List<AuthorInput> authors) {
         if(!StringUtils.hasLength(title) || authors == null || authors.isEmpty()) {
             throw new EmptyFieldException("Fields title or authors should not be empty");
         }
         Book book = bookRepository.save(new Book(title));
         if(!authors.isEmpty()) {
-            Set<Author> authorSet = authors.stream().filter(StringUtils::hasLength).map(a -> {
-                Author author = authorService.getAuthorByName(a);
+            Set<Author> authorSet = authors.stream().filter(a -> StringUtils.hasLength(a.getName())).map(a -> {
+                Author author = authorService.getAuthorByName(a.getName());
                 if(author != null) {
                     author.getBooks().add(book);
                 } else {
-                    author = new Author(a);
+                    author = new Author(a.getName());
                     author.setBooks(new HashSet<>(Set.of(book)));
                     authorService.saveOrUpdate(author);
                 }

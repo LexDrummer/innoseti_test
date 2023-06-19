@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.lexdrummer.innoseti_test.entity.Author;
 import ru.lexdrummer.innoseti_test.entity.Book;
+import ru.lexdrummer.innoseti_test.model.BookInput;
 import ru.lexdrummer.innoseti_test.repository.AuthorRepository;
 import ru.lexdrummer.innoseti_test.repository.BookRepository;
 import ru.lexdrummer.innoseti_test.util.AuthorNotFoundException;
@@ -29,15 +30,14 @@ public class AuthorService {
     }
 
     public Author getAuthorByName(String name) {
-        Author author = authorRepository.findAuthorByName(name);
-        if(author == null) {
+        /*if(author == null) {
             throw new AuthorNotFoundException("Author with name " + name + " is not found!");
-        }
-        return author;
+        }*/
+        return authorRepository.findAuthorByName(name);
     }
 
     @Transactional
-    public Author saveAuthor(String name, List<String> books) {
+    public Author saveAuthor(String name, List<BookInput> books) {
         if(!StringUtils.hasLength(name)) {
             throw new EmptyFieldException("Authors name field should not be empty");
         }
@@ -45,8 +45,8 @@ public class AuthorService {
         author.setName(name);
         if(books != null && !books.isEmpty()) {
             Set<Book> bookSet = books.stream().map(b -> {
-                Book book = bookRepository.findBookByTitle(b);
-                return book == null ? new Book(b) : book;
+                Book book = bookRepository.findBookByTitle(b.getTitle());
+                return book == null ? new Book(b.getTitle()) : book;
             }).collect(Collectors.toSet());
             author.setBooks(bookSet);
         }
